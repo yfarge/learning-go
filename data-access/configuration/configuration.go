@@ -22,12 +22,12 @@ type DatabaseSettings struct {
 	DatabaseName string `mapstructure:"database_name"`
 }
 
-func (self DatabaseSettings) ConnectionString() string {
+func (ds DatabaseSettings) ConnectionString() string {
 	connection_url := &url.URL{
 		Scheme: "postgres",
-		User:   url.UserPassword(self.Username, self.Password),
-		Host:   fmt.Sprintf("%s:%d", self.Host, self.Port),
-		Path:   self.DatabaseName,
+		User:   url.UserPassword(ds.Username, ds.Password),
+		Host:   fmt.Sprintf("%s:%d", ds.Host, ds.Port),
+		Path:   ds.DatabaseName,
 	}
 
 	query := connection_url.Query()
