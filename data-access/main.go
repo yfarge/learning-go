@@ -17,19 +17,26 @@ func main() {
 		os.Exit(1)
 	}
 
-	conn, err := pgx.Connect(context.Background(), config.Database.ConnectionString())
+	conn, err := pgx.Connect(
+		context.Background(),
+		config.Database.ConnectionString(),
+	)
+
 	if err != nil {
 		slog.Error("Failed to establish connection to database", "err", err)
 		os.Exit(1)
 	}
 	defer conn.Close(context.Background())
 
-	var greeting string
-	err = conn.QueryRow(context.Background(), "select 'Hello, world!'").Scan(&greeting)
+	var album string
+	err = conn.QueryRow(
+		context.Background(),
+		"SELECT title FROM album").Scan(&album)
+
 	if err != nil {
 		slog.Error("Failed to get greeting from database.", "err", err)
 		os.Exit(1)
 	}
 
-	fmt.Println(greeting)
+	fmt.Println(album)
 }
