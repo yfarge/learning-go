@@ -49,7 +49,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println(albums)
+	fmt.Printf("Albums found: %v\n", albums)
 
 	album, err := albumById(3, dbpool)
 	if err != nil {
@@ -57,7 +57,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println(album)
+	fmt.Printf("Album found: %v\n", album)
 
 	albId, err := addAlbum(Album{
 		Title:  "The Modern Sound of Betty Carter",
