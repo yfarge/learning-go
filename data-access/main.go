@@ -58,6 +58,19 @@ func main() {
 	}
 
 	fmt.Println(album)
+
+	albId, err := addAlbum(Album{
+		Title:  "The Modern Sound of Betty Carter",
+		Artist: "Betty Carter",
+		Price:  49.99,
+	}, dbpool)
+
+	if err != nil {
+		slog.Error("Failed to add album to database", "err", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("ID of added album %v\n", albId)
 }
 
 func albumsByArtist(name string, dbpool *pgxpool.Pool) ([]Album, error) {
@@ -106,4 +119,21 @@ func albumById(id int64, dbpool *pgxpool.Pool) (Album, error) {
 	}
 
 	return alb, nil
+}
+
+func addAlbum(alb Album, dbpool *pgxpool.Pool) (int64, error) {
+	var id int64
+	err := dbpool.QueryRow(
+		context.Background(),
+		"INSERT INTO album (title, artist, price) VALUES ($1, $2, $3) RETURNING id",
+		alb.Title,
+		alb.Artist,
+		alb.Price,
+	).Scan(&id)
+
+	if err != nil {
+		return 0, fmt.Errorf("addAlbum: %v", err)
+	}
+
+	return id, nil
 }
